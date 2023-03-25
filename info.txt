@@ -1,0 +1,119 @@
+npm install react-router-dom
+npm install @mui/material @emotion/react @emotion/styled --save
+npm install @mui/material @mui/styled-engine-sc styled-components --save
+npm install @mui/icons-material --save
+npm install --save react-apexcharts apexcharts --save
+npm install react-query --save
+npm install --save-dev @types/react-query
+npm install axios --save
+npm install react-hook-form @hookform/resolvers zod --save
+npm install react-toastify react-router-dom react-cookie date-fns lodash
+npm install -D @types/lodash
+npm install @tanstack/react-query @tanstack/react-query-devtools
+
+
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import NotFound from "./components/NotFound";
+import About from "./pages/About/About";
+import Home from "./pages/Home/Home";
+import "./App.css";
+import SignIn from "./pages/Auth/SignIn";
+import AuthLayout from "./components/AuthLayout";
+import { login, getToken } from "./api/auth/auth";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+interface ApplicationProps {}
+
+const POSTS = [
+  { id: 1, title: "Post1" },
+  { id: 2, title: "Post2" },
+];
+
+const App: React.FunctionComponent<ApplicationProps> = () => {
+  // query Client
+  const queryClient = useQueryClient();
+
+  // fetching data
+  const postsQuery = useQuery({
+    queryKey: ["posts"],
+    queryFn: () => wait(1000).then(() => [...POSTS]),
+    // queryFn: () => Promise.reject("Error, Something went wrong"),
+  });
+
+  // mutate(crud)
+  const newPostMutation = useMutation({
+    mutationFn: (title: any) => {
+      return wait(1000).then(() => POSTS.push({ id: 3, title: "Post 3" }));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+    },
+  });
+
+  if (postsQuery.isLoading) return <h1>Loading ...</h1>;
+  if (postsQuery.isError) return <pre>{JSON.stringify(postsQuery.error)}</pre>;
+
+  // const [state, setState] = React.useState();
+
+  // React.useEffect(() => {
+  //   const loginUser = async () => {
+  //     try {
+  //       const response = await login({
+  //         email: "adlipeeters@gmail.com",
+  //         password: "adli-2000",
+  //       });
+  //       // console.log(response); // handle response
+  //     } catch (error) {
+  //       // console.log(error); // handle error
+  //     }
+  //     try {
+  //       const res = getToken();
+  //       console.log(res);
+  //     } catch (error) {}
+  //   };
+
+  //   loginUser();
+  // }, []);
+
+  return (
+    <div>
+      {postsQuery.data.map((post) => (
+        <div key={post.id}>{post.title}</div>
+      ))}
+      <button
+        disabled={newPostMutation.isLoading}
+        onClick={() => newPostMutation.mutate("New Post")}
+      >
+        Add New
+      </button>
+    </div>
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route element={<Layout />}>
+    //       <Route index path="/" element={<Home />} />
+    //       <Route path="/about">
+    //         <Route index element={<About />} />
+    //         <Route path=":number" element={<About />} />
+    //       </Route>
+    //       <Route path="*" element={<NotFound />} />
+    //     </Route>
+    //     <Route element={<AuthLayout />}>
+    //       <Route path="/auth">
+    //         <Route index element={<SignIn />} />
+    //         <Route path="*" element={<SignIn />} />
+    //       </Route>
+    //     </Route>
+    //     <Route path="*" element={<NotFound />} />
+    //   </Routes>
+    // </BrowserRouter>
+  );
+};
+
+function wait(duration: number) {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+}
+
+export default App;

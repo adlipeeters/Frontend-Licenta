@@ -32,7 +32,22 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.apexcharts-menu.apexcharts-menu-open {
+  border-radius: 5px;
+}
+
+.apexcharts-menu-item {
+  transition: 350ms;
+}
+
+.apexcharts-menu-item:hover {
+  border-radius: 5px;
+  background: #9155FD !important;
+  color: white;
 }
