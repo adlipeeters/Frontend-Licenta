@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import FullScreenLoader from "../../components/FullScreenLoader/FullScreenLoader";
+import FullScreenLoader from "../../components/Loader/FullScreenLoader";
 import { useStateContext } from "../../context/AuthUserContext";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../../api/auth/auth";

@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Button, TextField } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,34 +10,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAccount } from "../../../api/accounts/accounts";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import {
+  updateCategory,
+  getCategory,
+} from "../../../api/categories/categories";
 
 const validationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Expected number, received a string",
-  }),
 });
 
-interface CreateAccountProps {}
+interface EditCategoryProps {}
 
 type ValidationSchema = z.infer<typeof validationSchema>;
 
-function CreateAccount(props: any) {
+function EditCategory(props: any) {
   const handleClose = () => {
-    props.setOpen(false);
+    // props.setOpen((prevState: any) => ({ ...prevState, state: false }));
+    props.setOpen((prevState: any) => ({ id: "", state: false }));
   };
 
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation({
-    mutationFn: createAccount,
+  const categoryQuery = useQuery({
+    queryKey: ["categoriesData", props.open.id],
+    // enabled: props.open.id != null,
+    queryFn: () => getCategory(Number(props.open.id)),
     onSuccess: (data) => {
-      toast.success("Account created successfully!", {
+      //   console.log(data);
+    },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: updateCategory,
+    onSuccess: (data) => {
+      toast.success("Category updated successfully!", {
         position: "top-right",
       });
-      queryClient.invalidateQueries(["accountsData"], { exact: true });
+      queryClient.invalidateQueries(["categoriesData"], {
+        exact: true,
+      });
+      queryClient.invalidateQueries(["categoriesData", props.open.id], {
+        exact: true,
+      });
       handleClose();
     },
     onError: (error: any) => {
@@ -53,21 +69,29 @@ function CreateAccount(props: any) {
     formState: { errors },
   } = useForm<ValidationSchema>({
     resolver: zodResolver(validationSchema),
+    defaultValues: { name: "" },
   });
 
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
-    createMutation.mutate({
+    editMutation.mutate({
+      id: props.open.id,
       name: data.name,
-      amount: data.amount,
     });
     reset();
   };
+
+  React.useEffect(() => {
+    if (categoryQuery?.data) {
+      reset({ name: categoryQuery.data.name });
+    }
+  }, [categoryQuery?.data, reset]);
+
   return (
     <>
       <div>
-        <Dialog open={props.open} onClose={handleClose} fullWidth={true}>
+        <Dialog open={props.open.state} onClose={handleClose} fullWidth={true}>
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            <DialogTitle>Create Account</DialogTitle>
+            <DialogTitle>Edit Category</DialogTitle>
             <DialogContent>
               <DialogContentText></DialogContentText>
               <TextField
@@ -83,20 +107,6 @@ function CreateAccount(props: any) {
                 {...register("name")}
                 helperText={errors.name && errors.name?.message}
               />
-              <TextField
-                size="small"
-                error={errors.amount ? true : false}
-                margin="normal"
-                required
-                fullWidth
-                id="amount"
-                label="Amount"
-                autoComplete="amount"
-                autoFocus
-                {...register("amount")}
-                helperText={errors.amount && errors.amount?.message}
-                type="number"
-              />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} variant="contained">
@@ -105,9 +115,9 @@ function CreateAccount(props: any) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={createMutation.isLoading ? true : false}
+                disabled={editMutation.isLoading ? true : false}
               >
-                {createMutation.isLoading ? (
+                {editMutation.isLoading ? (
                   <CircularProgress size={25} />
                 ) : (
                   "Save"
@@ -121,4 +131,4 @@ function CreateAccount(props: any) {
   );
 }
 
-export default CreateAccount;
+export default EditCategory;

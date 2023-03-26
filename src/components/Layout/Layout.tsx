@@ -6,11 +6,9 @@ interface LayoutProps {}
 
 const Layout: React.FunctionComponent<LayoutProps> = () => {
   return (
-    <>
-      <div>
-        <HeaderSidebar />
-      </div>
-    </>
+    <div>
+      <HeaderSidebar />
+    </div>
   );
 };
 

@@ -13,7 +13,7 @@ import { getMe, updateProfile } from "../../../api/auth/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ProfileImage from "./ProfileImage";
-import FullScreenLoader from "../../../components/FullScreenLoader/FullScreenLoader";
+import FullScreenLoader from "../../../components/Loader/FullScreenLoader";
 
 interface ProfileFormProps {}
 

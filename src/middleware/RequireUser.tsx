@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { getMe } from "../api/auth/auth";
 import { useStateContext } from "../context/AuthUserContext";
-import FullScreenLoader from "../components/FullScreenLoader/FullScreenLoader";
+import FullScreenLoader from "../components/Loader/FullScreenLoader";
 
 const RequireUser = ({ allowedRoles }: { allowedRoles: string[] }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["logged_in"]);

@@ -19,11 +19,11 @@ const validationSchema = z.object({
   }),
 });
 
-interface CreateAccountProps {}
+interface CreateTransactionProps {}
 
 type ValidationSchema = z.infer<typeof validationSchema>;
 
-function CreateAccount(props: any) {
+function CreateTransaction(props: any) {
   const handleClose = () => {
     props.setOpen(false);
   };
@@ -67,7 +67,7 @@ function CreateAccount(props: any) {
       <div>
         <Dialog open={props.open} onClose={handleClose} fullWidth={true}>
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            <DialogTitle>Create Account</DialogTitle>
+            <DialogTitle>Create Transaction</DialogTitle>
             <DialogContent>
               <DialogContentText></DialogContentText>
               <TextField
@@ -99,12 +99,10 @@ function CreateAccount(props: any) {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} variant="contained">
-                Cancel
-              </Button>
+              <Button onClick={handleClose}>Cancel</Button>
               <Button
                 type="submit"
-                variant="contained"
+                // variant="contained"
                 disabled={createMutation.isLoading ? true : false}
               >
                 {createMutation.isLoading ? (
@@ -121,4 +119,4 @@ function CreateAccount(props: any) {
   );
 }
 
-export default CreateAccount;
+export default CreateTransaction;

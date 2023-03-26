@@ -2,7 +2,7 @@ import { useCookies } from "react-cookie";
 import { useQuery } from "@tanstack/react-query";
 import { getMe } from "../api/auth/auth";
 import { useStateContext } from "../context/AuthUserContext";
-import FullScreenLoader from "../components/FullScreenLoader/FullScreenLoader";
+import FullScreenLoader from "../components/Loader/FullScreenLoader";
 import React from "react";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ type AuthMiddlewareProps = {
 const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cookies] = useCookies(["logged_in"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["logged_in"]);
   const stateContext = useStateContext();
 
   const query = useQuery(["authUser"], () => getMe(), {
@@ -28,6 +28,7 @@ const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children }) => {
       console.log(error.response.status);
       if (error.response.status === 401) {
         navigate("/login");
+        removeCookie("logged_in");
       }
     },
   });

@@ -10,6 +10,7 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import Modal from "../../components/Dialog/Dialog";
 import { useTheme } from "@mui/material/styles";
 import CreateAccount from "./components/CreateAccount";
+import CircularLoader from "../../components/Loader/CircularLoader";
 
 interface AccountsProps {}
 
@@ -27,25 +28,20 @@ const Accounts: React.FunctionComponent<AccountsProps> = () => {
     },
   });
 
-  if (query.isLoading) {
-    return (
-      <Box sx={{ display: "flex" }}>
-        <CircularProgress />
-      </Box>
-    );
+  if (query.isLoading || query.isError) {
+    return <CircularLoader />;
   }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Button
-        // variant="outlined"
+        variant="contained"
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           gap: "5px",
-          // background: theme.palette.success.main,
-          // color: "white",
+          marginBottom: "15px",
           "&:hover": {
             // backgroundColor: theme.palette.success.light,
           },
@@ -55,7 +51,7 @@ const Accounts: React.FunctionComponent<AccountsProps> = () => {
         <AddCardIcon />
         Add Account
       </Button>
-      <Grid container spacing={2} sx={{ marginTop: "0" }}>
+      <Grid container spacing={2}>
         {query.data.map((account: any) => (
           <Grid
             item

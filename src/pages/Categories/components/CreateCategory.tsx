@@ -10,20 +10,17 @@ import { z } from "zod";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAccount } from "../../../api/accounts/accounts";
+import { createCategory } from "../../../api/categories/categories";
 
 const validationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Expected number, received a string",
-  }),
 });
 
-interface CreateAccountProps {}
+interface CreateCategoryProps {}
 
 type ValidationSchema = z.infer<typeof validationSchema>;
 
-function CreateAccount(props: any) {
+function CreateCategory(props: any) {
   const handleClose = () => {
     props.setOpen(false);
   };
@@ -31,12 +28,12 @@ function CreateAccount(props: any) {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: createAccount,
+    mutationFn: createCategory,
     onSuccess: (data) => {
-      toast.success("Account created successfully!", {
+      toast.success("Category created successfully!", {
         position: "top-right",
       });
-      queryClient.invalidateQueries(["accountsData"], { exact: true });
+      queryClient.invalidateQueries(["categoriesData"], { exact: true });
       handleClose();
     },
     onError: (error: any) => {
@@ -58,7 +55,6 @@ function CreateAccount(props: any) {
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
     createMutation.mutate({
       name: data.name,
-      amount: data.amount,
     });
     reset();
   };
@@ -67,7 +63,7 @@ function CreateAccount(props: any) {
       <div>
         <Dialog open={props.open} onClose={handleClose} fullWidth={true}>
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            <DialogTitle>Create Account</DialogTitle>
+            <DialogTitle>Create Category</DialogTitle>
             <DialogContent>
               <DialogContentText></DialogContentText>
               <TextField
@@ -82,20 +78,6 @@ function CreateAccount(props: any) {
                 autoFocus
                 {...register("name")}
                 helperText={errors.name && errors.name?.message}
-              />
-              <TextField
-                size="small"
-                error={errors.amount ? true : false}
-                margin="normal"
-                required
-                fullWidth
-                id="amount"
-                label="Amount"
-                autoComplete="amount"
-                autoFocus
-                {...register("amount")}
-                helperText={errors.amount && errors.amount?.message}
-                type="number"
               />
             </DialogContent>
             <DialogActions>
@@ -121,4 +103,4 @@ function CreateAccount(props: any) {
   );
 }
 
-export default CreateAccount;
+export default CreateCategory;

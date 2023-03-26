@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import type { RouteObject } from "react-router-dom";
 import AuthLayout from "../components/Layout/AuthLayout";
-import FullScreenLoader from "../components/FullScreenLoader/FullScreenLoader";
+import FullScreenLoader from "../components/Loader/FullScreenLoader";
 import Layout from "../components/Layout/Layout";
 import RequireUser from "../middleware/RequireUser";
 // import UnauthorizePage from "../middleware/UnauthorizedPage";
@@ -14,6 +14,8 @@ import Categories from "../pages/Categories/Categories";
 import Home from "../pages/Home/Home";
 import Profile from "../pages/Profile/Profile";
 import Transactions from "../pages/Transactions/Transactions";
+import Landing from "../pages/Landing/Landing";
+import LandingLayout from "../components/Layout/LandingLayout";
 // import RequireUser from '../components/requireUser';
 // import HomePage from '../pages/home.page';
 // import LoginPage from '../pages/login.page';
@@ -35,9 +37,21 @@ const UnauthorizePage = Loadable(
 //   lazy(() => import('../pages/verifyemail.page'))
 // );
 
+const landingRoutes: RouteObject = {
+  path: "*",
+  element: <LandingLayout />,
+  children: [
+    {
+      path: "",
+      index: true,
+      element: <Landing />,
+    },
+  ],
+};
+
 const authRoutes: RouteObject = {
   path: "*",
-  element: <AuthLayout />,
+  element: <LandingLayout />,
   children: [
     {
       path: "login",
@@ -137,7 +151,7 @@ const normalRoutes: RouteObject = {
   ],
 };
 
-const routes: RouteObject[] = [authRoutes, normalRoutes];
+const routes: RouteObject[] = [landingRoutes, authRoutes, normalRoutes];
 
 export default routes;
 
