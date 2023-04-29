@@ -42,9 +42,7 @@ const Accounts: React.FunctionComponent<AccountsProps> = () => {
           justifyContent: "center",
           gap: "5px",
           marginBottom: "15px",
-          "&:hover": {
-            // backgroundColor: theme.palette.success.light,
-          },
+          "&:hover": {},
         }}
         onClick={() => setOpen(true)}
       >

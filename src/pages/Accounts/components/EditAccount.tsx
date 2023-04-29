@@ -50,7 +50,7 @@ const AccountPage: React.FunctionComponent<any> = (props) => {
     // enabled: id != null,
     queryFn: () => getAccount(Number(props.id)),
     onSuccess: (data) => {
-      console.log(data);
+      // console.log(data);
     },
   });
 
@@ -93,6 +93,10 @@ const AccountPage: React.FunctionComponent<any> = (props) => {
   };
 
   React.useEffect(() => {
+    accountQuery.refetch();
+  }, []);
+
+  React.useEffect(() => {
     if (accountQuery?.data) {
       reset({ name: accountQuery.data.name, amount: accountQuery.data.amount });
     }
@@ -127,6 +131,7 @@ const AccountPage: React.FunctionComponent<any> = (props) => {
         size="small"
         {...register("name")}
         helperText={errors.name && errors.name?.message}
+        InputLabelProps={{ shrink: true }}
       />
       <TextField
         disabled={editMutation.isLoading ? true : false}
@@ -140,6 +145,7 @@ const AccountPage: React.FunctionComponent<any> = (props) => {
         size="small"
         {...register("amount")}
         helperText={errors.amount && errors.amount?.message}
+        InputLabelProps={{ shrink: true }}
       />
       <Button
         fullWidth

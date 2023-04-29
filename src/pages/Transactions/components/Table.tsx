@@ -1,6 +1,21 @@
 import * as React from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridPrintExportOptions,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import { styled } from "@mui/material/styles";
+import { Chip, IconButton, Tooltip } from "@mui/material";
+import EditTransaction from "./EditTransaction";
+import { Delete, Edit } from "@mui/icons-material";
+import DeleteTransaction from "./DeleteTransaction";
+import {
+  parseISO,
+  formatDistanceToNow,
+  formatDistanceToNowStrict,
+  format,
+} from "date-fns";
 
 interface TransactionsTableProps {}
 
@@ -17,20 +32,90 @@ const TableWrapper = styled("div")(({ theme }) => ({
 }));
 
 const TransactionsTable: React.FunctionComponent<any> = (props) => {
-  const columns = [
-    { field: "id", headerName: "ID", width: 100 },
-    { field: "firstName", headerName: "First name", width: 150 },
-    { field: "lastName", headerName: "Last name", width: 150 },
-    { field: "age", headerName: "Age", type: "number", width: 100 },
-    // adaugă alte coloane aici
+  const [edit, setEdit] = React.useState({ state: false, id: "" });
+  const [destroy, setDestroy] = React.useState({ state: false, id: "" });
+
+  const handleEditClick = (rowData: any) => {
+    setEdit({ state: true, id: rowData.id });
+  };
+
+  const handleDeleteClick = (rowData: any) => {
+    setDestroy({ state: true, id: rowData.id });
+  };
+
+  React.useEffect(() => {
+    if (props.data != null && props.data.length > 0) {
+      for (let i = 0; i < props.data.length; i++) {
+        props.data[i]["formattedDate"] = format(
+          parseISO(props.data[i].createdAt),
+          "MMMM dd, yyyy"
+        );
+      }
+    }
+  }, [props.data]);
+
+  const columns: GridColDef[] = [
+    { field: "amount", headerName: "Amount" },
+    {
+      field: "type",
+      headerName: "Type",
+      valueFormatter: (params) =>
+        params.value.charAt(0).toUpperCase() + params.value.slice(1),
+    },
+    {
+      field: "account.name",
+      headerName: "Account",
+      valueGetter: (params) => params.row.account.name,
+    },
+    {
+      field: "category.name",
+      headerName: "Category",
+      valueGetter: (params) => params.row.category.name,
+      width: 150,
+    },
+    {
+      field: "formattedDate",
+      headerName: "Date",
+      width: 150,
+    },
+    {
+      field: "scheduledTransaction",
+      headerName: "",
+      width: 150,
+      renderCell: (params: any) => (
+        <React.Fragment>
+          {params.row.scheduledTransaction !== null ? (
+            <Chip label="Scheduled" />
+          ) : (
+            ""
+          )}
+        </React.Fragment>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      headerAlign: "right",
+      align: "right",
+      renderCell: (params: any) => (
+        <React.Fragment>
+          <Tooltip placement="left" title="Edit Transaction">
+            <IconButton onClick={() => handleEditClick(params.row)}>
+              <Edit />
+            </IconButton>
+          </Tooltip>
+          <Tooltip placement="right" title="Delete Transaction">
+            <IconButton onClick={() => handleDeleteClick(params.row)}>
+              <Delete />
+            </IconButton>
+          </Tooltip>
+        </React.Fragment>
+      ),
+    },
   ];
 
-  const rows = [
-    { id: 1, firstName: "John", lastName: "Doe", age: 35 },
-    { id: 2, firstName: "Jane", lastName: "Doe", age: 28 },
-    { id: 3, firstName: "Bob", lastName: "Smith", age: 42 },
-    // adaugă alte rânduri aici
-  ];
+  const rows = [...props.data];
   return (
     <TableWrapper>
       <DataGrid
@@ -38,7 +123,10 @@ const TransactionsTable: React.FunctionComponent<any> = (props) => {
         columns={columns}
         slots={{ toolbar: GridToolbar }}
         sx={{ border: "none", minHeight: "300px" }}
+        disableRowSelectionOnClick
       />
+      <EditTransaction open={edit} setOpen={setEdit} />
+      <DeleteTransaction open={destroy} setOpen={setDestroy} />
     </TableWrapper>
   );
 };

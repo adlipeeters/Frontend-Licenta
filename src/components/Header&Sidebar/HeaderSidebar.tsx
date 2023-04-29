@@ -16,7 +16,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import routes from "../../constants/routes";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import images from "../../constants/images";
@@ -31,8 +30,11 @@ import { getProfileImage, logout } from "../../api/auth/auth";
 import { toast } from "react-toastify";
 import { useStateContext } from "../../context/AuthUserContext";
 import { CircularProgress } from "@mui/material";
+import GridViewIcon from "@mui/icons-material/GridView";
+import Notifications from "./Notifications";
+import SidebarLinks from "./SidebarLinks";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 interface Props {
   /**
@@ -86,8 +88,6 @@ export default function ResponsiveDrawer(props: Props) {
     setAnchorEl(null);
   };
 
-  const location = useLocation();
-
   const drawer = (
     <div>
       {/* <Toolbar /> */}
@@ -96,49 +96,22 @@ export default function ResponsiveDrawer(props: Props) {
         sx={{
           textAlign: "center",
           fontWeight: 600,
-          paddingY: "10px",
+          paddingY: "30px",
           color: theme.palette.grey[700],
+          // color: theme.palette.primary.main,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "start",
+          gap: "30px",
+          paddingLeft: "12px",
         }}
       >
-        Wallet App
+        <img src={images.logo} alt="" />
+        Smart Wallet
       </Typography>
       <Divider />
       <List>
-        {routes.map((item, index) => (
-          <Link
-            to={item.link}
-            style={{ textDecoration: "none" }}
-            onClick={() => handleDrawerToggle()}
-            key={index}
-          >
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  borderTopRightRadius: "50px",
-                  borderBottomRightRadius: "50px",
-                  color: theme.palette.text.primary,
-                  marginY: "5px",
-                }}
-                style={{
-                  background:
-                    item.link.toString().toLocaleLowerCase() ===
-                    location.pathname
-                      ? theme.gradient.main
-                      : " ",
-                  color:
-                    item.link.toString().toLocaleLowerCase() ===
-                    location.pathname
-                      ? "white"
-                      : " ",
-                  fontSize: "18px",
-                }}
-              >
-                <ListItemIcon>{/* {item.icon} */}</ListItemIcon>
-                {item.name}
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        ))}
+        <SidebarLinks event={handleDrawerToggle} />
       </List>
       <Divider />
       {/* <List>
@@ -198,9 +171,23 @@ export default function ResponsiveDrawer(props: Props) {
           >
             Responsive drawer
           </Typography>
-          <IconButton>
+          <Notifications />
+          {/* <IconButton>
             <NotificationsNoneIcon sx={{ color: theme.palette.grey[800] }} />
           </IconButton>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem>Profile</MenuItem>
+            <MenuItem>My account</MenuItem>
+            <MenuItem>Logout</MenuItem>
+          </Menu> */}
           <IconButton
             aria-controls={open ? "basic-menu" : undefined}
             aria-haspopup="true"

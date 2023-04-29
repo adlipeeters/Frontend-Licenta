@@ -38,6 +38,13 @@ const CategoriesTable: React.FunctionComponent<any> = (props) => {
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", width: 250 },
     {
+      field: "type",
+      headerName: "Type",
+      width: 250,
+      valueFormatter: (params) =>
+        params.value.charAt(0).toUpperCase() + params.value.slice(1),
+    },
+    {
       field: "actions",
       headerName: "Actions",
       width: 150,

@@ -9,8 +9,10 @@ import images from "../../../constants/images";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import LinkIcon from "@mui/icons-material/Link";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Tooltip from "@mui/material/Tooltip";
+import { Edit, Delete } from "@mui/icons-material";
+import DeleteAccount from "./DeleteAccount";
 
 const Item = styled(Card)(({ theme }) => ({
   ...theme.typography.body2,
@@ -25,6 +27,14 @@ const Item = styled(Card)(({ theme }) => ({
 
 export default function ActionAreaCard(props: any) {
   const theme = useTheme();
+  const [destroy, setDestroy] = React.useState({
+    state: false,
+    id: props?.data?.id,
+  });
+
+  const handleDeleteClick = () => {
+    setDestroy({ state: true, id: props.data.id });
+  };
 
   return (
     <Item>
@@ -65,7 +75,7 @@ export default function ActionAreaCard(props: any) {
           {props.data.amount}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ display: "flex", gap: "10px" }}>
         <Tooltip title="Click for more information">
           <Link
             to={`/accounts/${props.data.id}`}
@@ -79,10 +89,17 @@ export default function ActionAreaCard(props: any) {
             }}
           >
             <Button size="small" variant="contained">
-              <LinkIcon />
+              <VisibilityIcon />
             </Button>
           </Link>
         </Tooltip>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={() => handleDeleteClick()}
+        >
+          <Delete />
+        </Button>
       </CardActions>
       <img
         src={images.triangle_light}
@@ -94,6 +111,7 @@ export default function ActionAreaCard(props: any) {
           maxHeight: "90%",
         }}
       />
+      <DeleteAccount open={destroy} setOpen={setDestroy} />
     </Item>
   );
 }

@@ -125,7 +125,7 @@ const TotalEarning: React.FunctionComponent<TotalEarningProps> = () => {
                 justifyContent: "start",
                 alignItems: "center",
                 color: theme.palette.grey[700],
-                marginTop: "25px",
+                marginTop: "35px",
                 fontWeight: 700,
                 fontSize: "32px",
               }}
@@ -164,8 +164,9 @@ const TotalEarning: React.FunctionComponent<TotalEarningProps> = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "end",
-            gap: "15px",
-            marginTop: "40px",
+            gap: "35px",
+            // marginTop: "40px",
+            // background: "red",
           }}
         >
           {[1, 2, 3].map((el, index) => (

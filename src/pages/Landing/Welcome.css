@@ -1,0 +1,34 @@
+.getStartedBtn {
+  margin-top: 20px;
+  border: none;
+  background-image: linear-gradient(to right,
+      #f2994a 0%,
+      #f2c94c 51%,
+      #f2994a 100%);
+
+  /* // margin: 10px; */
+  text-align: center;
+  /* // text-transform: uppercase; */
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+  color: #fff;
+
+}
+
+.getStartedBtn:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.fullHeight {
+  height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  padding-left: 16px;
+}

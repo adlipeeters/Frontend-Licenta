@@ -21,11 +21,11 @@ const validationSchema = z.object({
   //   name: z.string().min(1, { message: "Name is required" }),
 });
 
-interface EditCategoryProps {}
+interface DeleteCategoryProps {}
 
 type ValidationSchema = z.infer<typeof validationSchema>;
 
-function EditCategory(props: any) {
+function DeleteCategory(props: any) {
   const theme = useTheme();
   const handleClose = () => {
     // props.setOpen((prevState: any) => ({ ...prevState, state: false }));
@@ -90,7 +90,7 @@ function EditCategory(props: any) {
   return (
     <>
       <div>
-        <Dialog open={props.open.state} onClose={handleClose} fullWidth={true}>
+        <Dialog open={props.open.state} onClose={handleClose} fullWidth={false}>
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
             <DialogTitle
               sx={{
@@ -135,4 +135,4 @@ function EditCategory(props: any) {
   );
 }
 
-export default EditCategory;
+export default DeleteCategory;

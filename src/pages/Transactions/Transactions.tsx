@@ -5,6 +5,7 @@ import TransactionsTable from "./components/Table";
 import CircularLoader from "../../components/Loader/CircularLoader";
 import { Box, Button } from "@mui/material";
 import AddCardIcon from "@mui/icons-material/AddCard";
+import CreateTransaction from "./components/CreateTransaction";
 
 interface TransactionsProps {}
 
@@ -25,7 +26,7 @@ const Transactions: React.FunctionComponent<TransactionsProps> = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, height: "100%" }}>
       <Button
         variant="contained"
         sx={{
@@ -41,9 +42,10 @@ const Transactions: React.FunctionComponent<TransactionsProps> = () => {
         onClick={() => setOpen(true)}
       >
         <AddCardIcon />
-        Add Account
+        Add Transaction
       </Button>
       <TransactionsTable data={query.data} />
+      <CreateTransaction open={open} setOpen={setOpen} />
     </Box>
   );
 };

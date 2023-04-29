@@ -1,58 +1,64 @@
 import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { getAccount, updateAccount } from "../../../api/accounts/accounts";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
-import { Box, TextField } from "@mui/material";
-import { toast } from "react-toastify";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Box } from "@mui/material";
 import EditAccount from "./EditAccount";
+import TransactionsByAccount from "./TransactionsByAccount";
+import { getTransactions } from "../../../api/transactions/transactions";
+import { useState, useEffect } from "react";
 
 const Item = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(2),
   textAlign: "center",
-  // color: theme.palette.text.secondary,
   borderRadius: "5px",
   boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
   position: "relative",
-  height: "100%",
+  // height: "100%",
 }));
-
-const validationSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Expected number, received a string",
-  }),
-});
 
 interface AccountPageProps {}
 
 const AccountPage: React.FunctionComponent<AccountPageProps> = () => {
   const { id } = useParams();
-  const queryClient = useQueryClient();
+  const [transactions, setTransactions] = useState();
 
-  const accountQuery = useQuery({
-    queryKey: ["accountsData", id],
-    enabled: id != null,
-    queryFn: () => getAccount(Number(id)),
-    onSuccess: (data) => {
-      console.log(data);
+  const query = useQuery(["transactionsData"], () => getTransactions(), {
+    retry: 1,
+    onSuccess: (data) => {},
+    onError: (error: any) => {
+      // console.log(error.response.status);
     },
   });
+
+  useEffect(() => {
+    let filteredTransactions: any = [];
+    if (query?.isSuccess) {
+      query?.data?.map((transaction: any) => {
+        if (transaction.account.id === Number(id)) {
+          filteredTransactions.push(transaction);
+        }
+      });
+      setTransactions(filteredTransactions);
+    }
+  }, [query?.data, query?.isSuccess, id]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Item></Item>
-        </Grid>
         <Grid item xs={12} md={4}>
           <Item>
             <EditAccount id={id} />
+          </Item>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Item style={{ height: "100%" }}>
+            <TransactionsByAccount
+              transactions={transactions}
+              isLoading={query.isLoading}
+            />
           </Item>
         </Grid>
       </Grid>

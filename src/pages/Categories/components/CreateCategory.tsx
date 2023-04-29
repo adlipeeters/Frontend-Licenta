@@ -1,4 +1,13 @@
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -14,6 +23,7 @@ import { createCategory } from "../../../api/categories/categories";
 
 const validationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
+  type: z.enum(["income", "expense"]).optional(),
 });
 
 interface CreateCategoryProps {}
@@ -55,6 +65,7 @@ function CreateCategory(props: any) {
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => {
     createMutation.mutate({
       name: data.name,
+      type: data.type,
     });
     reset();
   };
@@ -79,6 +90,31 @@ function CreateCategory(props: any) {
                 {...register("name")}
                 helperText={errors.name && errors.name?.message}
               />
+              <FormControl
+                sx={{ width: "100%", marginBottom: "8.5px" }}
+                size="small"
+              >
+                <InputLabel id="demo-simple-select-readonly-label">
+                  Type
+                </InputLabel>
+                <Select
+                  error={errors.type ? true : false}
+                  labelId="demo-simple-select-readonly-label"
+                  id="demo-simple-select-readonly"
+                  label="Type"
+                  defaultValue={""}
+                  {...register("type")}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={"expense"}>Expense</MenuItem>
+                  <MenuItem value={"income"}>Income</MenuItem>
+                </Select>
+                <FormHelperText>
+                  {errors.type && errors.type?.message}
+                </FormHelperText>
+              </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} variant="contained">

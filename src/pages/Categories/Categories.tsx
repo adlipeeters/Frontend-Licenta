@@ -26,7 +26,7 @@ const Categories: React.FunctionComponent<CategoriesProps> = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, height: "100%" }}>
       <Button
         variant="contained"
         sx={{

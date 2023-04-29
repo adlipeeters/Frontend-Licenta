@@ -9,8 +9,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useCookies } from "react-cookie";
+import { useLocation } from "react-router-dom";
+import images from "../../constants/images";
 
 export default function ButtonAppBar() {
+  const location = useLocation();
+
+  console.log(location.pathname);
   const [cookies] = useCookies(["logged_in"]);
 
   const theme = useTheme();
@@ -19,12 +24,22 @@ export default function ButtonAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
-        sx={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}
+        sx={{
+          borderBottomLeftRadius: "5px",
+          borderBottomRightRadius: "5px",
+          background: location.pathname === "/" ? "transparent" : "",
+          boxShadow: location.pathname === "/" ? "none" : "",
+        }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, fontWeight: "600" }}
+          >
             <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-              Wallet App
+              {/* <img src={images.logo} alt="" style={{ color: "white" }} /> */}
+              SMART WALLET
             </Link>
           </Typography>
           {!!cookies.logged_in ? (
@@ -34,7 +49,7 @@ export default function ButtonAppBar() {
             >
               <Button
                 color="inherit"
-                sx={{ color: "white", borderRadius: "10px" }}
+                sx={{ color: "white", borderRadius: "10px", fontWeight: "600" }}
               >
                 Dashboard
               </Button>
@@ -44,7 +59,11 @@ export default function ButtonAppBar() {
               <Link to="/register" style={{ textDecoration: "none" }}>
                 <Button
                   color="inherit"
-                  sx={{ color: "white", borderRadius: "10px" }}
+                  sx={{
+                    color: "white",
+                    borderRadius: "10px",
+                    fontWeight: "600",
+                  }}
                 >
                   Register
                 </Button>
@@ -55,7 +74,11 @@ export default function ButtonAppBar() {
               >
                 <Button
                   color="inherit"
-                  sx={{ color: "white", borderRadius: "10px" }}
+                  sx={{
+                    color: "white",
+                    borderRadius: "10px",
+                    fontWeight: "600",
+                  }}
                 >
                   Login
                 </Button>

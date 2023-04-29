@@ -1,5 +1,14 @@
 import React from "react";
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -18,6 +27,7 @@ import {
 
 const validationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
+  type: z.enum(["income", "expense"]).optional(),
 });
 
 interface EditCategoryProps {}
@@ -66,6 +76,7 @@ function EditCategory(props: any) {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<ValidationSchema>({
     resolver: zodResolver(validationSchema),
@@ -76,13 +87,14 @@ function EditCategory(props: any) {
     editMutation.mutate({
       id: props.open.id,
       name: data.name,
+      type: data.type,
     });
     reset();
   };
 
   React.useEffect(() => {
     if (categoryQuery?.data) {
-      reset({ name: categoryQuery.data.name });
+      reset({ name: categoryQuery.data.name, type: categoryQuery.data.type });
     }
   }, [categoryQuery?.data, reset]);
 
@@ -106,7 +118,34 @@ function EditCategory(props: any) {
                 autoFocus
                 {...register("name")}
                 helperText={errors.name && errors.name?.message}
+                InputLabelProps={{ shrink: true }}
               />
+              <FormControl
+                sx={{ width: "100%", marginBottom: "8.5px" }}
+                size="small"
+              >
+                <InputLabel id="demo-simple-select-readonly-label">
+                  Type
+                </InputLabel>
+                <Select
+                  error={errors.type ? true : false}
+                  labelId="demo-simple-select-readonly-label"
+                  id="demo-simple-select-readonly"
+                  label="Type"
+                  defaultValue={""}
+                  {...register("type")}
+                  value={watch("type") || ""}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={"expense"}>Expense</MenuItem>
+                  <MenuItem value={"income"}>Income</MenuItem>
+                </Select>
+                <FormHelperText>
+                  {errors.type && errors.type?.message}
+                </FormHelperText>
+              </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} variant="contained">

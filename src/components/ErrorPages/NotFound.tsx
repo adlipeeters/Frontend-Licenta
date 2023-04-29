@@ -16,7 +16,7 @@ const NotFoundWrapper = styled("div")({
   alignItems: "center",
   flexDirection: "column",
   height: "100%",
-  // marginTop: "20%",
+  marginTop: "100px",
 });
 
 const NotFound: React.FunctionComponent<NotFoundProps> = () => {

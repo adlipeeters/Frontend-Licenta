@@ -62,7 +62,7 @@ const Home: React.FunctionComponent<HomeProps> = () => {
             <StatisticsCard />
           </Item>
         </Grid>
-        <Grid item xs={12} md={6} lg={4}>
+        <Grid item xs={12} md={8}>
           <Item>
             <ExpenseOverview />
           </Item>
@@ -72,9 +72,9 @@ const Home: React.FunctionComponent<HomeProps> = () => {
             <TotalEarning />
           </Item>
         </Grid>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Item></Item>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

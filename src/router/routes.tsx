@@ -16,6 +16,13 @@ import Profile from "../pages/Profile/Profile";
 import Transactions from "../pages/Transactions/Transactions";
 import Landing from "../pages/Landing/Landing";
 import LandingLayout from "../components/Layout/LandingLayout";
+import RecurringTransactions from "../pages/RecurringTransactions/RecurringTransactions";
+import BillReminders from "../pages/BillReminders/BillReminders";
+import Pricing from "../pages/Landing/components/Pricing";
+import NotFound from "../components/ErrorPages/NotFound";
+import Reports from "../pages/Reports/Reports";
+import Budget from "../pages/Budget/Budget";
+import Users from "../admin_pages/Users/Users";
 // import RequireUser from '../components/requireUser';
 // import HomePage from '../pages/home.page';
 // import LoginPage from '../pages/login.page';
@@ -46,6 +53,11 @@ const landingRoutes: RouteObject = {
       index: true,
       element: <Landing />,
     },
+    {
+      path: "pricing",
+      index: true,
+      element: <Pricing />,
+    },
   ],
 };
 
@@ -58,7 +70,7 @@ const authRoutes: RouteObject = {
       element: <SignIn />,
     },
     {
-      path: "register",
+      path: "register/:number?",
       element: <SignUp />,
     },
     // {
@@ -74,14 +86,14 @@ const authRoutes: RouteObject = {
   ],
 };
 
-const normalRoutes: RouteObject = {
+const userRoutes: RouteObject = {
   path: "*",
   element: <Layout />,
   children: [
     {
       // index: true,
       path: "dashboard",
-      element: <RequireUser allowedRoles={["user", "admin"]} />,
+      element: <RequireUser allowedRoles={["user"]} />,
       children: [
         {
           path: "",
@@ -92,7 +104,7 @@ const normalRoutes: RouteObject = {
     {
       // index: true,
       path: "profile-settings",
-      element: <RequireUser allowedRoles={["user", "admin"]} />,
+      element: <RequireUser allowedRoles={["user"]} />,
       children: [
         {
           path: "",
@@ -102,7 +114,7 @@ const normalRoutes: RouteObject = {
     },
     {
       path: "about",
-      element: <RequireUser allowedRoles={["user", "admin"]} />,
+      element: <RequireUser allowedRoles={["user"]} />,
       children: [
         {
           path: "",
@@ -112,7 +124,7 @@ const normalRoutes: RouteObject = {
     },
     {
       path: "accounts",
-      element: <RequireUser allowedRoles={["user", "admin"]} />,
+      element: <RequireUser allowedRoles={["user"]} />,
       children: [
         {
           path: "",
@@ -126,7 +138,7 @@ const normalRoutes: RouteObject = {
     },
     {
       path: "transactions",
-      element: <RequireUser allowedRoles={["user", "admin"]} />,
+      element: <RequireUser allowedRoles={["user"]} />,
       children: [
         {
           path: "",
@@ -135,12 +147,52 @@ const normalRoutes: RouteObject = {
       ],
     },
     {
+      path: "scheduled-transactions",
+      element: <RequireUser allowedRoles={["user"]} />,
+      children: [
+        {
+          path: "",
+          element: <RecurringTransactions />,
+        },
+      ],
+    },
+    {
+      path: "bill-reminders",
+      element: <RequireUser allowedRoles={["user"]} />,
+      children: [
+        {
+          path: "",
+          element: <BillReminders />,
+        },
+      ],
+    },
+    {
       path: "categories",
-      element: <RequireUser allowedRoles={["user", "admin"]} />,
+      element: <RequireUser allowedRoles={["user"]} />,
       children: [
         {
           path: "",
           element: <Categories />,
+        },
+      ],
+    },
+    {
+      path: "reports",
+      element: <RequireUser allowedRoles={["user"]} />,
+      children: [
+        {
+          path: "",
+          element: <Reports />,
+        },
+      ],
+    },
+    {
+      path: "budget",
+      element: <RequireUser allowedRoles={["user"]} />,
+      children: [
+        {
+          path: "",
+          element: <Budget />,
         },
       ],
     },
@@ -151,7 +203,43 @@ const normalRoutes: RouteObject = {
   ],
 };
 
-const routes: RouteObject[] = [landingRoutes, authRoutes, normalRoutes];
+const adminRoutes: RouteObject = {
+  path: "admin",
+  element: <Layout />,
+  children: [
+    {
+      // index: true,
+      path: "users",
+      element: <RequireUser allowedRoles={["admin"]} />,
+      children: [
+        {
+          path: "",
+          element: <Users />,
+        },
+      ],
+    },
+  ],
+};
+
+const notFoundRoute: RouteObject = {
+  path: "*",
+  element: <LandingLayout />,
+  children: [
+    {
+      path: "*",
+      index: true,
+      element: <NotFound />,
+    },
+  ],
+};
+
+const routes: RouteObject[] = [
+  landingRoutes,
+  authRoutes,
+  userRoutes,
+  adminRoutes,
+  notFoundRoute,
+];
 
 export default routes;
 

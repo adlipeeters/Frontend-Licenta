@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 const API_BASE_URL = "http://localhost:3500/";
 
@@ -10,6 +12,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
+    NProgress.start();
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -23,9 +26,11 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
+    NProgress.done();
     return response;
   },
   async (error) => {
+    NProgress.done();
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       // originalRequest._retry = true;
