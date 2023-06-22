@@ -119,10 +119,11 @@ const TransactionsTable: React.FunctionComponent<any> = (props) => {
   return (
     <TableWrapper>
       <DataGrid
+        // autoHeight
         rows={rows}
         columns={columns}
         slots={{ toolbar: GridToolbar }}
-        sx={{ border: "none", minHeight: "300px" }}
+        sx={{ border: "none", minHeight: "75vh" }}
         disableRowSelectionOnClick
       />
       <EditTransaction open={edit} setOpen={setEdit} />

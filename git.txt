@@ -1,0 +1,22 @@
+git init
+git add .
+git commit -m "Some description"
+git remote add origin https://github.com/adlipeeters/wallet_app.git
+git remote set-url origin "https://adlipeeters@github.com/adlipeeters/wallet_app.git"
+git push -u -f origin master
+
+
+//create gitignore file
+touch .gitignore
+
+
+//git create new branch from current
+git checkout -b topic/newbranch
+
+
+//show current branch
+git branch --show-current
+
+how to switch another branch in git
+git switch branch-name
+

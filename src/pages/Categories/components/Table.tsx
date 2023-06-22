@@ -72,13 +72,11 @@ const CategoriesTable: React.FunctionComponent<any> = (props) => {
   return (
     <TableWrapper>
       <DataGrid
-        autoHeight
+        // autoHeight
         rows={rows}
         columns={columns}
         slots={{ toolbar: GridToolbar }}
-        sx={{
-          border: "none",
-        }}
+        sx={{ border: "none", minHeight: "75vh" }}
         disableRowSelectionOnClick
       />
       <EditCategory open={edit} setOpen={setEdit} />

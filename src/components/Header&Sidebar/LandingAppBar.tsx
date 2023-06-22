@@ -42,6 +42,21 @@ export default function ButtonAppBar() {
               SMART WALLET
             </Link>
           </Typography>
+          <Link
+            to="/blog"
+            style={{ textDecoration: "none", marginLeft: "15px" }}
+          >
+            <Button
+              color="inherit"
+              sx={{
+                color: "white",
+                borderRadius: "10px",
+                fontWeight: "600",
+              }}
+            >
+              Blog
+            </Button>
+          </Link>
           {!!cookies.logged_in ? (
             <Link
               to="/dashboard"

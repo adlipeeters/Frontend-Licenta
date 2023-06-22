@@ -16,6 +16,19 @@ export const calcExpenses = (transactions: any) => {
   const currentMonthStart = startOfMonth(new Date());
   const currentMonthEnd = endOfMonth(new Date());
 
+  let copy = [...transactions];
+  transactions = [];
+  transactions = copy.filter((transaction: any, _i: any) => {
+    if (
+      isWithinInterval(new Date(transaction?.createdAt), {
+        start: currentMonthStart,
+        end: currentMonthEnd,
+      })
+    ) {
+      return transaction;
+    }
+  });
+
   // group transactions by date
   const groupedTransactions = _.groupBy(transactions, (transaction) => {
     if (transaction?.type === "expense") {

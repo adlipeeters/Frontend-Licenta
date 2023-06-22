@@ -11,6 +11,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import GroupIcon from '@mui/icons-material/Group';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 // export interface Route {
 //   name: string;
 //   link: string;
@@ -61,14 +62,26 @@ const routes = [
     guard: ["user"],
   },
   {
-    name: "Budget",
+    name: "Budget (Coming soon)",
     link: "/budget",
     icon: <AccountBalanceIcon />,
     guard: ["user"],
   },
   {
+    name: "Family access (Coming soon)",
+    link: "/family-access",
+    icon: <Diversity1Icon />,
+    guard: ["user"],
+  },
+  {
     name: "Users",
     link: "/admin/users",
+    icon: <GroupIcon />,
+    guard: ["admin"],
+  },
+  {
+    name: "Blog",
+    link: "/admin/blog",
     icon: <GroupIcon />,
     guard: ["admin"],
   },

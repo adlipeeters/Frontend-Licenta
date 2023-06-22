@@ -7,20 +7,43 @@ import {
   isWithinInterval,
   eachDayOfInterval,
   format,
+  parse,
 } from "date-fns";
 
 // example transactions array
 
-export const calcExpenseVsIncome = (
+export const getReport = (
+  reportType: any,
   transactions: any,
   periodFilter: any = null,
   accountFilter: any = null,
   categoryFilter: any = null
 ) => {
-  // console.log(accountFilter);
   // get current month start and end dates
-  const currentMonthStart = startOfMonth(new Date());
-  const currentMonthEnd = endOfMonth(new Date());
+  let monthStart: any = null;
+  let monthEnd: any = null;
+
+  if (periodFilter === null) {
+    monthStart = startOfMonth(new Date());
+    monthEnd = endOfMonth(new Date());
+  } else {
+    monthStart = startOfMonth(periodFilter);
+    monthEnd = endOfMonth(periodFilter);
+  }
+  console.log(monthStart, monthEnd);
+
+  let copy = [...transactions];
+  transactions = [];
+  transactions = copy.filter((transaction: any, _i: any) => {
+    if (
+      isWithinInterval(new Date(transaction?.createdAt), {
+        start: monthStart,
+        end: monthEnd,
+      })
+    ) {
+      return transaction;
+    }
+  });
 
   if (accountFilter.length > 0) {
     let copy = [...transactions];
@@ -32,10 +55,35 @@ export const calcExpenseVsIncome = (
     });
   }
 
+  if (categoryFilter.length > 0) {
+    let copy = [...transactions];
+    transactions = [];
+    transactions = copy.filter((transaction: any, _i: any) => {
+      if (!categoryFilter.includes(transaction.category.id)) {
+        return transaction;
+      }
+    });
+  }
+
+  switch (reportType) {
+    case 0:
+      return incomeVsExpense(transactions, monthStart, monthEnd);
+    case 1:
+      return expenseByCategory(transactions);
+    case 2:
+      return incomeByCategory(transactions);
+    default:
+      return incomeVsExpense(transactions, monthStart, monthEnd);
+  }
+};
+
+const incomeVsExpense = (transactions: any, monthStart: any, monthEnd: any) => {
   // group income transactions by date
   const incomeGroupedTransactions = _.groupBy(transactions, (transaction) => {
-    const transactionDate = new Date(transaction.createdAt);
-    return format(transactionDate, "dd");
+    if (transaction?.type === "income") {
+      const transactionDate = new Date(transaction.createdAt);
+      return format(transactionDate, "dd");
+    }
   });
 
   // group expense transactions by date
@@ -48,8 +96,8 @@ export const calcExpenseVsIncome = (
 
   // iterate over each day of the current month and calculate total expenses for that day
   const daysOfMonth = eachDayOfInterval({
-    start: currentMonthStart,
-    end: currentMonthEnd,
+    start: monthStart,
+    end: monthEnd,
   });
 
   let categories = daysOfMonth.map((day: any) => format(day, "dd"));
@@ -66,5 +114,62 @@ export const calcExpenseVsIncome = (
     return _.sumBy(dayTransactions, "amount");
   });
 
-  return { categories, incomeSeries, expenseSeries };
+  let series = [
+    { name: "Income", data: incomeSeries },
+    { name: "Expense", data: expenseSeries },
+  ];
+
+  return { categories, series };
+};
+
+const expenseByCategory = (transactions: any) => {
+  let copy = [...transactions];
+  transactions = [];
+  transactions = copy.filter((transaction: any) => {
+    if (transaction.type === "expense") {
+      return transaction;
+    }
+  });
+
+  const groupByCategory = _.groupBy(transactions, "category.name");
+
+  let categories = Object.keys(groupByCategory).map((key: any) => {
+    return key;
+  });
+
+  let series: any[] = Object.keys(groupByCategory).map((key: any) => {
+    let data = _.sumBy(groupByCategory[key], "amount");
+    return {
+      name: key,
+      data: [data],
+    };
+  });
+
+  return { categories, series };
+};
+
+const incomeByCategory = (transactions: any) => {
+  let copy = [...transactions];
+  transactions = [];
+  transactions = copy.filter((transaction: any) => {
+    if (transaction.type === "income") {
+      return transaction;
+    }
+  });
+
+  const groupByCategory = _.groupBy(transactions, "category.name");
+
+  let categories = Object.keys(groupByCategory).map((key: any) => {
+    return key;
+  });
+
+  let series: any[] = Object.keys(groupByCategory).map((key: any) => {
+    let data = _.sumBy(groupByCategory[key], "amount");
+    return {
+      name: key,
+      data: [data],
+    };
+  });
+
+  return { categories, series };
 };

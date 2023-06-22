@@ -19,7 +19,7 @@ import ReportFilter from "./components/Filter";
 import Report from "./components/Report";
 import { useQuery } from "@tanstack/react-query";
 import { getTransactions } from "../../api/transactions/transactions";
-import { calcExpenseVsIncome } from "./Helper";
+import { getReport } from "./Helper";
 
 interface ReportsProps {}
 
@@ -36,14 +36,15 @@ const ReportWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   flexGrow: 1,
+  gap: "40px",
 }));
 
 const Reports: React.FunctionComponent<ReportsProps> = () => {
   const theme = useTheme();
   const [type, setType] = React.useState(0);
   const [accounts, setAccounts] = React.useState([]);
-  const [excludeCategories, setExcludeCategories] = React.useState([]);
-  const [period, setPeriod] = useState<null | any | Date>(new Date());
+  const [excludedCategories, setExcludedCategories] = React.useState([]);
+  const [period, setPeriod] = useState<null | any | Date>(null);
   const [data, setData] = useState<null | any | Date>(null);
 
   const query = useQuery(["transactionsData"], () => getTransactions(), {
@@ -58,15 +59,16 @@ const Reports: React.FunctionComponent<ReportsProps> = () => {
 
   React.useEffect(() => {
     if (query.data) {
-      const data = calcExpenseVsIncome(
+      const data = getReport(
+        type,
         query.data,
         period,
         accounts,
-        excludeCategories
+        excludedCategories
       );
       setData(data);
     }
-  }, [query.data, period, accounts, excludeCategories]);
+  }, [type, query.data, period, accounts, excludedCategories]);
 
   return (
     <ReportWrapper>
@@ -75,11 +77,13 @@ const Reports: React.FunctionComponent<ReportsProps> = () => {
         type={type}
         period={period}
         accounts={accounts}
+        excludedCategories={excludedCategories}
         setType={setType}
         setPeriod={setPeriod}
         setAccounts={setAccounts}
+        setExcludedCategories={setExcludedCategories}
       />
-      <Divider light sx={{ paddingY: "5px" }} />
+      {/* <Divider light sx={{ paddingY: "5px" }} /> */}
       <Report data={data} />
       {/* <Divider light sx={{ paddingY: "5px" }} />
       <div style={{ background: theme.palette.grey[50] }}>Report Footer</div> */}

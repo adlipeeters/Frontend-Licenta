@@ -5,23 +5,16 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import { Outlet, useLocation, Link } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import images from "../../constants/images";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -29,8 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { getProfileImage, logout } from "../../api/auth/auth";
 import { toast } from "react-toastify";
 import { useStateContext } from "../../context/AuthUserContext";
-import { CircularProgress } from "@mui/material";
-import GridViewIcon from "@mui/icons-material/GridView";
+import { Button, CircularProgress } from "@mui/material";
 import Notifications from "./Notifications";
 import SidebarLinks from "./SidebarLinks";
 
@@ -89,31 +81,45 @@ export default function ResponsiveDrawer(props: Props) {
   };
 
   const drawer = (
-    <div>
+    <div style={{ height: "100%", position: "relative" }}>
       {/* <Toolbar /> */}
-      <Typography
-        variant="h5"
-        sx={{
-          textAlign: "center",
-          fontWeight: 600,
-          paddingY: "30px",
-          color: theme.palette.grey[700],
-          // color: theme.palette.primary.main,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "start",
-          gap: "30px",
-          paddingLeft: "12px",
-        }}
-      >
-        <img src={images.logo} alt="" />
-        Smart Wallet
-      </Typography>
+      <Link to="dashboard" style={{ textDecoration: "none" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            textAlign: "center",
+            fontWeight: 600,
+            paddingY: "30px",
+            color: theme.palette.grey[700],
+            // color: theme.palette.primary.main,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "start",
+            gap: "30px",
+            paddingLeft: "12px",
+          }}
+        >
+          <img src={images.logo} alt="" />
+          Smart Wallet
+        </Typography>
+      </Link>
       <Divider />
       <List>
         <SidebarLinks event={handleDrawerToggle} />
       </List>
       <Divider />
+      <Button
+        onClick={() => logoutMutation.mutate()}
+        sx={{
+          color: theme.palette.grey[600],
+          width: "100%",
+          position: "absolute",
+          bottom: "20px",
+        }}
+      >
+        <LogoutIcon sx={{ marginRight: "3px" }} />
+        Logout
+      </Button>
       {/* <List>
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -169,7 +175,7 @@ export default function ResponsiveDrawer(props: Props) {
             component="div"
             sx={{ color: theme.palette.grey[800], flexGrow: 1 }}
           >
-            Responsive drawer
+            {/* Responsive drawer */}
           </Typography>
           <Notifications />
           {/* <IconButton>
@@ -297,6 +303,8 @@ export default function ResponsiveDrawer(props: Props) {
           flexGrow: 1,
           p: 3,
           width: { lg: `calc(100% - ${drawerWidth}px)` },
+          height: "100%",
+          overflowX: "auto",
         }}
       >
         <Toolbar />

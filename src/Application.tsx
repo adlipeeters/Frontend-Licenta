@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import About from "./pages/About/About";
+import About from "./pages/Blog/Blog";
 import Home from "./pages/Home/Home";
 interface ApplicationProps {}
 

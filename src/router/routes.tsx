@@ -5,7 +5,7 @@ import FullScreenLoader from "../components/Loader/FullScreenLoader";
 import Layout from "../components/Layout/Layout";
 import RequireUser from "../middleware/RequireUser";
 // import UnauthorizePage from "../middleware/UnauthorizedPage";
-import About from "../pages/About/About";
+import Blog from "../pages/Blog/Blog";
 import Accounts from "../pages/Accounts/Accounts";
 import AccountPage from "../pages/Accounts/components/AccountPage";
 import SignIn from "../pages/Auth/SignIn";
@@ -23,6 +23,7 @@ import NotFound from "../components/ErrorPages/NotFound";
 import Reports from "../pages/Reports/Reports";
 import Budget from "../pages/Budget/Budget";
 import Users from "../admin_pages/Users/Users";
+import BlogAdministration from "../pages/BlogAdministration/BlogAdministration";
 // import RequireUser from '../components/requireUser';
 // import HomePage from '../pages/home.page';
 // import LoginPage from '../pages/login.page';
@@ -30,11 +31,11 @@ import Users from "../admin_pages/Users/Users";
 
 const Loadable =
   (Component: React.ComponentType<any>) => (props: JSX.IntrinsicAttributes) =>
-    (
-      <Suspense fallback={<FullScreenLoader />}>
-        <Component {...props} />
-      </Suspense>
-    );
+  (
+    <Suspense fallback={<FullScreenLoader />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
 // const RegisterPage = Loadable(lazy(() => import('../pages/register.page')));
 const UnauthorizePage = Loadable(
@@ -57,6 +58,11 @@ const landingRoutes: RouteObject = {
       path: "pricing",
       index: true,
       element: <Pricing />,
+    },
+    {
+      path: "blog",
+      index: true,
+      element: <Blog />,
     },
   ],
 };
@@ -109,16 +115,6 @@ const userRoutes: RouteObject = {
         {
           path: "",
           element: <Profile />,
-        },
-      ],
-    },
-    {
-      path: "about",
-      element: <RequireUser allowedRoles={["user"]} />,
-      children: [
-        {
-          path: "",
-          element: <About />,
         },
       ],
     },
@@ -218,6 +214,17 @@ const adminRoutes: RouteObject = {
         },
       ],
     },
+    {
+      // index: true,
+      path: "blog",
+      element: <RequireUser allowedRoles={["admin"]} />,
+      children: [
+        {
+          path: "",
+          element: <BlogAdministration />,
+        },
+      ],
+    },
   ],
 };
 
@@ -248,9 +255,9 @@ export default routes;
 //   <Routes>
 //     <Route element={<Layout />}>
 //       <Route index path="/" element={<Home />} />
-//       <Route path="/about">
-//         <Route index element={<About />} />
-//         <Route path=":number" element={<About />} />
+//       <Route path="/Blog">
+//         <Route index element={<Blog />} />
+//         <Route path=":number" element={<Blog />} />
 //       </Route>
 //       <Route path="*" element={<NotFound />} />
 //     </Route>

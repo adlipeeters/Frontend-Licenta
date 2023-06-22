@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { ApexOptions } from "apexcharts";
 import { useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import IncomVsExpenseChart from "./IncomVsExpenseChart";
+import IncomVsExpenseChart from "./Chart";
 
 interface ReportProps {}
 

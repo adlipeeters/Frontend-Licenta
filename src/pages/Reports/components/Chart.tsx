@@ -4,33 +4,15 @@ import React from "react";
 import { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
-interface IncomVsExpenseChartProps {}
+interface ReportChartProps {}
 
-const IncomVsExpenseChart: any = (props: any) => {
+const ReportChart: any = (props: any) => {
   // console.log(props?.data);
-  const [series, setSeries] = useState([
-    {
-      name: "Income",
-      data: [],
-    },
-    {
-      name: "Expense",
-      data: [],
-    },
-  ]);
+  const [series, setSeries] = useState([]);
 
   React.useEffect(() => {
     if (props?.data !== null) {
-      setSeries([
-        {
-          name: "Income",
-          data: props?.data?.incomeSeries ? props?.data?.incomeSeries : [],
-        },
-        {
-          name: "Expense",
-          data: props?.data?.expenseSeries ? props?.data?.expenseSeries : [],
-        },
-      ]);
+      setSeries(props?.data?.series);
     }
   }, [props.data]);
 
@@ -85,4 +67,4 @@ const IncomVsExpenseChart: any = (props: any) => {
   );
 };
 
-export default IncomVsExpenseChart;
+export default ReportChart;

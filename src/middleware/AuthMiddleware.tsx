@@ -19,14 +19,10 @@ const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children }) => {
   const query = useQuery(["authUser"], () => getMe(), {
     enabled: !!cookies.logged_in,
     retry: 1,
-    // select: (data) => data.data.user,
     onSuccess: (data) => {
-      // console.log(data);
       stateContext.dispatch({ type: "SET_USER", payload: data });
     },
     onError: (error: any) => {
-      // console.log(error.response.status);
-      // console.log(error);
       if (error.response.status === 401) {
         navigate("/login");
         removeCookie("logged_in");
